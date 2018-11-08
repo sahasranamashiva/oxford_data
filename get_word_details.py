@@ -2,7 +2,7 @@ import sys
 from google.cloud import firestore
 
 db = firestore.Client()
-
+print(db)
 doc_ref = db.collection(u'word').document(sys.argv[1])
 
 word = doc_ref.get()

@@ -44,8 +44,9 @@ def word_details(word):
     searchList = BeautifulSoup(wordContent, 'lxml').find_all(
         'h2', {'class': 'searchHeading'})
 
-    if len(searchList) >= 0:
+    if len(searchList) == 0:
         if getPhonetic(wordContent) == 0:
+            # print('<-*-*-*-*-*-*-*-*-*-*->')
             fPhonetic = ''
         else:
             # print('This is phonetic--> '+getPhonetic(wordContent))
@@ -74,5 +75,5 @@ def word_details(word):
 
 
 for row in wordList_file:
-    word = re.sub('\n', '', row)
+    word = re.sub('\n', '', row.split(',')[1])
     word_details(word)
