@@ -1,0 +1,7 @@
+python3.7 check_wiktionary.py xbf
+python3.7 check_wiktionary.py xbg
+python3.7 check_wiktionary.py xbh
+python3.7 check_wiktionary.py xbi
+python3.7 check_wiktionary.py xbj
+python3.7 check_wiktionary.py xbk
+python3.7 check_wiktionary.py xbl

@@ -2,11 +2,16 @@ import requests
 import re
 from bs4 import BeautifulSoup
 import sys
+import MySQLdb
+import time
 
-from google.cloud import firestore
+# from google.cloud import firestore
 
-db = firestore.Client()
+# db = firestore.Client()
 
+conn = MySQLdb.connect(host='localhost', port=3306,
+                       user='root', password='astuvastu')
+cur = conn.cursor()
 
 def getPhonetic(wordContent):
     phoneticList = BeautifulSoup(wordContent, 'lxml').find_all(
@@ -70,23 +75,29 @@ def word_details(index, word):
         fPOS = getPartOfSpeech(wordContent)
         # wordList_Output.write(getPartOfSpeech(wordContent))
         if fPOS != 'abbreviation':
-            doc_ref = db.collection(u'word').document(word)
-            doc_ref.set({
-                u'index': index,
-                u'Phonetic': fPhonetic,
-                u'Origin': fOrigin,
-                u'POS': fPOS
-            })
+            # doc_ref = db.collection(u'word').document(word)
+            # doc_ref.set({
+            #     u'index': index,
+            #     u'Phonetic': fPhonetic,
+            #     u'Origin': fOrigin,
+            #     u'POS': fPOS
+            # })
+            insert_statement = "INSERT INTO ashu.word_bank(word,phonetic,origin,part_of_speech) values(\"" + \
+                word+"\",\""+fPhonetic+"\",\""+fOrigin+"\",\""+fPOS+"\")"
+            print(insert_statement)
+            cur.execute(insert_statement)
+            conn.commit()
         else:
-            wordList_not_done.write(str(index)+',' + word+'\n')
+            wordList_not_done.write(word+'\n')
             wordList_not_done.close()
 
     else:
-        wordList_not_done.write(str(index)+',' + word+'\n')
+        wordList_not_done.write(word+'\n')
         wordList_not_done.close()
 
 
 for row in wordList_file:
     word = re.sub('\n', '', row.split(',')[1])
     index = int(row.split(',')[0])
+    time.sleep(2)
     word_details(index, word)
